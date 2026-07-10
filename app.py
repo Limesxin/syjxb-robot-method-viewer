@@ -1,12 +1,13 @@
 import streamlit as st
 from streamlit_pdf_viewer import pdf_viewer
 
+# 设置页面配置，使布局适应手机屏幕
 st.set_page_config(page_title="设备操作文档", layout="wide")
 st.title("📱 设备操作指引")
 
 file_path = "method.pdf"
 
-# 依然保留兜底按钮，防止极个别老旧机型不兼容
+# 保留备用下载/打开按钮，方便学生直接调用手机自带的阅读器
 with open(file_path, "rb") as pdf_file:
     st.download_button(
         label="📥 备用通道：点击使用手机自带阅读器打开",
@@ -17,6 +18,5 @@ with open(file_path, "rb") as pdf_file:
 
 st.divider()
 
-# 使用专门的 pdf_viewer 组件替代之前的 display_pdf 函数
-# width=700 可以让它在电脑端看起来大小合适，在手机端会自动适应屏幕宽度
-pdf_viewer(file_path, width=700)
+# 使用专用组件渲染 PDF，它会自动将每一页转换为适应手机屏幕宽度的页面
+pdf_viewer(file_path)
