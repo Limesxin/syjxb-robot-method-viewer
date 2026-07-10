@@ -1,31 +1,22 @@
 import streamlit as st
-import base64
+from streamlit_pdf_viewer import pdf_viewer
 
-# 设置页面配置，适应手机端浏览
 st.set_page_config(page_title="设备操作文档", layout="wide")
 st.title("📱 设备操作指引")
 
 file_path = "method.pdf"
 
-# 1. 提供备用下载按钮（为了兼容部分无法直接预览的手机浏览器）
+# 依然保留兜底按钮，防止极个别老旧机型不兼容
 with open(file_path, "rb") as pdf_file:
-    PDFbyte = pdf_file.read()
-
-st.download_button(
-    label="📥 如果下方无法预览，请点击这里下载/打开文档",
-    data=PDFbyte,
-    file_name="method.pdf",
-    mime="application/pdf"
-)
+    st.download_button(
+        label="📥 备用通道：点击使用手机自带阅读器打开",
+        data=pdf_file,
+        file_name="method.pdf",
+        mime="application/pdf"
+    )
 
 st.divider()
 
-# 2. 将 PDF 转换为 Base64 编码并内嵌展示
-def display_pdf(path):
-    with open(path, "rb") as f:
-        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-    # 使用 iframe 嵌入 PDF
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800" type="application/pdf"></iframe>'
-    st.markdown(pdf_display, unsafe_allow_html=True)
-
-display_pdf(file_path)
+# 使用专门的 pdf_viewer 组件替代之前的 display_pdf 函数
+# width=700 可以让它在电脑端看起来大小合适，在手机端会自动适应屏幕宽度
+pdf_viewer(file_path, width=700)
